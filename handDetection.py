@@ -16,7 +16,9 @@ class HandDetector():
         self.mp_hands = mp.solutions.hands
 
         self.hands = self.mp_hands.Hands()
-        
+
+        # Ids of the tip of the fingers
+        self.tipIds = [4, 8, 12, 16, 20]
         
     # Creating the function to return the hands location
     def findHands(self, image):
@@ -44,3 +46,44 @@ class HandDetector():
                     self.mp_drawing_styles.get_default_hand_connections_style())
                 
         return image
+    
+    def findPosition(self, img, handNo=0):   # Fetches the position of a hand
+        
+        # Creating empty lists to store position
+        xList = []
+        yList = []
+        self.lmList = []
+
+        # If a hand is detected:
+        if self.results.multi_hand_landmarks:
+            # Gets the information of a hand
+            myHand = self.results.multi_hand_landmarks[handNo]
+            # For each information, get and store the information
+            for id, lm in enumerate(myHand.landmark):
+                h, w, c = img.shape
+                cx, cy = int(lm.x * w), int(lm.y * h)
+                xList.append(cx)
+                yList.append(cy)
+                self.lmList.append([id, cx, cy])
+
+        return self.lmList
+    
+    # Check if index finger is up
+    def fingersUp(self):    
+        fingers = [] 
+        
+        # Thumb
+        if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]:
+            fingers.append(1)
+        else:
+            fingers.append(0)
+
+        # Fingers
+        for id in range(1, 5):
+
+            if self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id] - 2][2]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
+
+        return fingers

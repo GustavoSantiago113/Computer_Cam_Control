@@ -1,16 +1,15 @@
 import cv2
 import handDetection as hd
-import mediapipe as mp
-mp_hands = mp.solutions.hands
+import mouseControl as mc
 
 # Create a function to run when set to run
 def main():
-    
     # Opening the camera
     cap = cv2.VideoCapture(0)
     
     # Creating a variable to store the use the hand detector class
     hand_detector = hd.HandDetector()
+    mouse_control = mc.MouseControl()
 
     # While the camera is opened
     while cap.isOpened():
@@ -20,9 +19,21 @@ def main():
         
         # Detecting hand and drawing lines
         image = hand_detector.findHands(image)
-        
+
+        # Getting position of hand
+        lmList = hand_detector.findPosition(image)
+
+        # If a hand is detected and has position
+        if len(lmList)!=0:
+
+            # Check the fingers tips status
+            fingers = hand_detector.fingersUp()
+
+            # Move the mouse
+            mouse_control.moveMouse(fingers, lmList)
+
         # Display the frame with annotations
-        cv2.imshow('Control Computer by hand movements', image)
+        cv2.imshow('Control Computer by hand movements', cv2.flip(image, 1))
 
         # Exit loop if 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):

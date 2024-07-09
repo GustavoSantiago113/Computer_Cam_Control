@@ -35,7 +35,17 @@ class MouseControl():
     
     # Click
     def click(self, fingers, hand_detector):
-        if fingers[1] == 1 and fingers[0] == 1:
-                length = hand_detector.findDistance(5, 4)
-                if length < 10:
-                    pyautogui.click()
+        if fingers[1] == 1:
+            length = hand_detector.findDistance(5, 4)
+            print(length)
+            # Click with the left button by touching your thumb finger in your ring finger base
+            if length < 40:
+                pyautogui.click()
+            
+            # Double click by moving your thumb finger away from your ring finger base
+            if length > 130:
+                pyautogui.click(clicks=2)
+
+        if fingers[1] == 1 and fingers[4] == 1:
+            # Right click
+            pyautogui.click(button = "right")

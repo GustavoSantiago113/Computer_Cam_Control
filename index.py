@@ -33,7 +33,7 @@ def main():
             # Move the mouse by using your left index finger up
             mouse_control.moveMouse(fingers, lmList)
 
-            # Click by touching you thumb finger in your ring finger base
+            # Click
             mouse_control.click(fingers, hand_detector)
 
         # Display the frame with annotations

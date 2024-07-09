@@ -7,8 +7,9 @@
 
 ## What can you do with it?
 
-- [ ] Mouse movement;
-- [ ] Click in things;
-- [ ] Increase and decrease volume; 
-- [ ] Use keyboard arrows;
-- [ ] Zoom in and out;
+- [X] Mouse movement - left hand;
+- [ ] Click in things - left hand;
+- [ ] Click and drag - left hand;
+- [ ] Increase and decrease volume - right hand; 
+- [ ] Use keyboard arrows - right hand;
+- [ ] Zoom in and out - both hands;

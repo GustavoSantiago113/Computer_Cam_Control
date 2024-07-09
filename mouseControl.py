@@ -32,3 +32,10 @@ class MouseControl():
 
             # Moving the cursor
             pyautogui.moveTo(self.screen_width - x3, y3)
+    
+    # Click
+    def click(self, fingers, hand_detector):
+        if fingers[1] == 1 and fingers[0] == 1:
+                length = hand_detector.findDistance(5, 4)
+                if length < 10:
+                    pyautogui.click()

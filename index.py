@@ -1,6 +1,7 @@
 import cv2
 import handDetection as hd
 import mouseControl as mc
+import pyautogui
 
 # Create a function to run when set to run
 def main():
@@ -29,8 +30,11 @@ def main():
             # Check the fingers tips status
             fingers = hand_detector.fingersUp()
 
-            # Move the mouse
+            # Move the mouse by using your left index finger up
             mouse_control.moveMouse(fingers, lmList)
+
+            # Click by touching you thumb finger in your ring finger base
+            mouse_control.click(fingers, hand_detector)
 
         # Display the frame with annotations
         cv2.imshow('Control Computer by hand movements', cv2.flip(image, 1))

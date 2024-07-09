@@ -1,5 +1,6 @@
 import mediapipe as mp
 import cv2
+import math
 
 # Creating the class to detect and draw the annotations in the hands
 class HandDetector():
@@ -87,3 +88,13 @@ class HandDetector():
                 fingers.append(0)
 
         return fingers
+    
+    # Finds distance between two fingers
+    def findDistance(self, p1, p2):   
+        x1, y1 = self.lmList[p1][1:]
+        x2, y2 = self.lmList[p2][1:]
+        cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
+
+        length = math.hypot(x2 - x1, y2 - y1)
+
+        return length

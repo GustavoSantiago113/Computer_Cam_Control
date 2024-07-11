@@ -27,11 +27,11 @@ class MouseControl():
         # If the index finger is up:
         if fingers[1] == 1:
 
-            x3 = np.interp(x1, self.xp, self.fpx)
-            y3 = np.interp(y1, self.yp, self.fpy)
+            self.x3 = np.interp(x1, self.xp, self.fpx)
+            self.y3 = np.interp(y1, self.yp, self.fpy)
 
             # Moving the cursor
-            pyautogui.moveTo(self.screen_width - x3, y3)
+            pyautogui.moveTo(self.screen_width - self.x3, self.y3)
     
     # Click
     def click(self, fingers, hand_detector):
@@ -39,12 +39,8 @@ class MouseControl():
             length = hand_detector.findDistance(5, 4)
             print(length)
             # Click with the left button by touching your thumb finger in your ring finger base
-            if length < 40:
+            if length < 12:
                 pyautogui.click()
-            
-            # Double click by moving your thumb finger away from your ring finger base
-            if length > 130:
-                pyautogui.click(clicks=2)
 
         if fingers[1] == 1 and fingers[4] == 1:
             # Right click

@@ -91,15 +91,10 @@ class HandDetector():
     
     # Finds distance between two fingers
     def findDistance(self, p1, p2):   
-        
-        # Calculating the relative hand length for reduce the distance bias
-        z1, w1 = self.lmList[12][1:]
-        z2, w2 = self.lmList[0][1:]
-        distance_proportion = math.hypot(z2 - z1, w2 - w1)
 
         x1, y1 = self.lmList[p1][1:]
         x2, y2 = self.lmList[p2][1:]
 
-        length = (math.hypot(x2 - x1, y2 - y1) / distance_proportion)*100
+        length = math.hypot(x2 - x1, y2 - y1)
         
         return length

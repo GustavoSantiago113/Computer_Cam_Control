@@ -3,12 +3,20 @@
 
 ## Summary
 
-- [What can you do with it?](#what-can-you-do-with-it)
+- [Features](#features)
+- [How can I achieve each feature?](#how-can-i-achieve-each-feature)
 
-## What can you do with it?
+## Features
 
 - [X] Mouse movement - left hand;
-- [X] Click (right, left)  - left hand;
+- [X] Click (right, left, double)  - left hand;
+- [X] Drag mouse - left hand;
 - [ ] Increase and decrease volume - right hand; 
-- [ ] Use keyboard arrows - right hand;
+- [ ] Use keyboard shortcuts (arrows, Esc, open keyboard, and enter) - right hand;
 - [ ] Zoom in and out - both hands;
+
+*** What will make this project the difference ***
+- Calculate the square box proportional to the hand distance
+- Create a start-stop
+
+## How can I achieve each feature?

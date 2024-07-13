@@ -21,20 +21,29 @@ def main():
         # Detecting hand and drawing lines
         image = hand_detector.findHands(image)
 
-        # Getting position of hand
-        lmList = hand_detector.findPosition(image)
+        # Detect if the hand is right or left
+        handsType = hand_detector.left_right()
+        for handType in handsType:
+            # If the left hand is detected
+            if handType == "Right":
+                # Getting position of hand
+                lmList = hand_detector.findPosition(image)
 
-        # If a hand is detected and has position
-        if len(lmList)!=0:
+                # If a hand is detected and has position
+                if len(lmList)!=0:
 
-            # Check the fingers tips status
-            fingers = hand_detector.fingersUp()
+                    # Check the fingers tips status
+                    fingers = hand_detector.fingersUp()
 
-            # Move the mouse by using your left index finger up
-            mouse_control.moveMouse(fingers, lmList)
+                    # Move the mouse by using your left index finger up
+                    mouse_control.moveMouse(fingers, lmList)
 
-            # Click
-            mouse_control.click(fingers, hand_detector)
+                    # Click
+                    mouse_control.click(fingers, hand_detector)
+
+                    # Drag
+                    mouse_control.drag(fingers)
+            #if handType == "Left":
 
         # Display the frame with annotations
         cv2.imshow('Control Computer by hand movements', cv2.flip(image, 1))

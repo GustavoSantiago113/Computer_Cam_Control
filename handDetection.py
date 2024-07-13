@@ -48,6 +48,15 @@ class HandDetector():
                 
         return image
     
+    # Detects if a hand is right or left
+    def left_right(self):
+        handsType=[]
+        if self.results.multi_hand_landmarks:
+            for hand in self.results.multi_handedness:
+                handType=hand.classification[0].label
+                handsType.append(handType)
+        return handsType
+    
     def findPosition(self, img, handNo=0):   # Fetches the position of a hand
         
         # Creating empty lists to store position
@@ -75,9 +84,9 @@ class HandDetector():
         
         # Thumb
         if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]:
-            fingers.append(1)
-        else:
             fingers.append(0)
+        else:
+            fingers.append(1)
 
         # Fingers
         for id in range(1, 5):

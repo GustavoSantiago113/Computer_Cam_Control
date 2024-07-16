@@ -1,7 +1,5 @@
 import cv2
-import handDetection as hd
-import mouseControl as mc
-import pyautogui
+import resources as mg
 
 # Create a function to run when set to run
 def main():
@@ -9,8 +7,9 @@ def main():
     cap = cv2.VideoCapture(0)
     
     # Creating a variable to store the use the hand detector class
-    hand_detector = hd.HandDetector()
-    mouse_control = mc.MouseControl()
+    hand_detector = mg.HandDetector()
+    mouse_control = mg.MouseControl()
+    volume_control = mg.VolumeControl()
 
     # While the camera is opened
     while cap.isOpened():
@@ -25,7 +24,7 @@ def main():
         handsType = hand_detector.left_right()
         for handType in handsType:
             # If the left hand is detected
-            if handType == "Right":
+            """ if handType == "Right":
                 # Getting position of hand
                 lmList = hand_detector.findPosition(image)
 
@@ -43,7 +42,21 @@ def main():
 
                     # Drag
                     mouse_control.drag(fingers)
-            #if handType == "Left":
+ """
+            # If the right hand is detected:
+            if handType == "Left":
+                
+                # Getting position of hand
+                lmList = hand_detector.findPosition(image)
+
+                # If a hand is detected and has position
+                if len(lmList)!=0:
+                    
+                    # Check the fingers tips status
+                    fingersR = hand_detector.fingersUpR()
+                    
+                    # Change the volume
+                    volume_control.volume(fingersR, hand_detector)
 
         # Display the frame with annotations
         cv2.imshow('Control Computer by hand movements', cv2.flip(image, 1))

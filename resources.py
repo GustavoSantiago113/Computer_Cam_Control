@@ -198,7 +198,7 @@ class VolumeControl():
     # Defining the function to perform it
     def volume(self, fingers, hand_detector):
 
-        # If all the fingers are up,
+        # If all the fingers are up:
         if all(element == 1 for element in fingers):
             # Get the distance between index and thumb tips
             length = hand_detector.findDistance(8, 4)
@@ -208,3 +208,39 @@ class VolumeControl():
                 pyautogui.press("volumeup")
             else:
                 pyautogui.press("volumedown")
+
+# Class to use keyboards
+class KeyboardShortcuts():
+    def __init__(self) -> None:
+        pass
+
+    # Defining the function to do it
+    def shortcuts(self, fingers):
+
+        # If only the thumb is up, use left arrow:
+        if fingers[0] == 1 and all(finger ==0 for finger in fingers[1:]):
+            pyautogui.press("left")
+            
+        # If only the pinky is up, use right arrow:
+        if all(finger ==0 for finger in fingers[:4]) and fingers[4] == 1:
+            pyautogui.press("right")
+        
+        # If only the index finger is up, use up arrow:
+        if fingers[0] == 0 and fingers[1] == 1 and all(finger ==0 for finger in fingers[2:]):
+            pyautogui.press("up")
+        
+        # If both index and middle fingers are up, use down arrow:
+        if fingers[0] == 0 and all(finger == 1 for finger in fingers[1:3]) and all(finger == 0 for finger in fingers[3:]):
+            pyautogui.press("down")
+        
+        # If both thumb and index fingers are up, use Esc:
+        if all(finger == 1 for finger in fingers[0:2]) and all(finger == 0 for finger in fingers[2:]):
+            pyautogui.press("esc")
+        
+        # If both thumb and pinky fingers are up, use enter:
+        if fingers[0] == 1 and all(finger == 0 for finger in fingers[1:4]) and fingers[4] == 1:
+            pyautogui.press("enter")
+        
+        # If both index and pinky fingers are up, open keyboard:
+        if fingers[0] == 0 and fingers[1] == 1 and all(finger == 0 for finger in fingers[2:4]) and fingers[4] == 1:
+            pyautogui.hotkey('ctrl', 'win', 'o')

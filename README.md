@@ -12,7 +12,7 @@
 - [X] Click (right, left, double)  - left hand;
 - [X] Drag mouse - left hand;
 - [X] Increase and decrease volume - right hand; 
-- [ ] Use keyboard shortcuts (arrows, Esc, open keyboard, and enter) - right hand;
+- [X] Use keyboard shortcuts (arrows, Esc, open keyboard, and enter) - right hand;
 - [ ] Zoom in and out - both hands;
 
 *** What will make this project the difference ***

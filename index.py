@@ -10,6 +10,7 @@ def main():
     hand_detector = mg.HandDetector()
     mouse_control = mg.MouseControl()
     volume_control = mg.VolumeControl()
+    keyboard_control = mg.KeyboardShortcuts()
 
     # While the camera is opened
     while cap.isOpened():
@@ -57,6 +58,9 @@ def main():
                     
                     # Change the volume
                     volume_control.volume(fingersR, hand_detector)
+
+                    # Use keyboard shortcuts
+                    keyboard_control.shortcuts(fingersR)
 
         # Display the frame with annotations
         cv2.imshow('Control Computer by hand movements', cv2.flip(image, 1))

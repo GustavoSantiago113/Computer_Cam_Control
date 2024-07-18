@@ -8,7 +8,7 @@ import math
 class HandDetector():
     
     # Initializing the class, with the needed variables
-    def __init__(self, model_complexity = 0, min_detection_confidence = 0.5, min_tracking_confidence = 0.5):
+    def __init__(self, model_complexity = 0, min_detection_confidence = 0.75, min_tracking_confidence = 0.75):
         
         self.model_complexity = model_complexity
         self.min_detection_confidence = min_detection_confidence
@@ -50,16 +50,8 @@ class HandDetector():
                 
         return image
     
-    # Detects if a hand is right or left
-    def left_right(self):
-        handsType=[]
-        if self.results.multi_hand_landmarks:
-            for hand in self.results.multi_handedness:
-                handType=hand.classification[0].label
-                handsType.append(handType)
-        return handsType
-    
-    def findPosition(self, img, handNo=0):   # Fetches the position of a hand
+    # Fetches the position of a hand
+    def findPosition(self, img, handNo=0, handType = None):
         
         # Creating empty lists to store position
         xList = []
@@ -68,52 +60,44 @@ class HandDetector():
 
         # If a hand is detected:
         if self.results.multi_hand_landmarks:
-            # Gets the information of a hand
-            myHand = self.results.multi_hand_landmarks[handNo]
-            # For each information, get and store the information
-            for id, lm in enumerate(myHand.landmark):
-                h, w, c = img.shape
-                cx, cy = int(lm.x * w), int(lm.y * h)
-                xList.append(cx)
-                yList.append(cy)
-                self.lmList.append([id, cx, cy])
+            # For each hand detected
+            for hand in self.results.multi_handedness:
+                # If the hand is the same as selected previously:
+                if hand.classification[0].label == handType:
+                    # Gets the information of the hand
+                    myHand = self.results.multi_hand_landmarks[handNo]
+                    # For each information, get and store the information
+                    for id, lm in enumerate(myHand.landmark):
+                        h, w, c = img.shape
+                        cx, cy = int(lm.x * w), int(lm.y * h)
+                        xList.append(cx)
+                        yList.append(cy)
+                        self.lmList.append([id, cx, cy])
 
         return self.lmList
     
     # Check if index finger is up
-    def fingersUp(self):    
+    def fingersUp(self, lmList, hand):    
         fingers = [] 
         
-        # Thumb
-        if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]:
-            fingers.append(0)
-        else:
-            fingers.append(1)
-
-        # Fingers
-        for id in range(1, 5):
-
-            if self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id] - 2][2]:
+        # Right hand
+        if hand == "Right":
+            # Thumb
+            if lmList[self.tipIds[0]][1] > lmList[self.tipIds[0] - 1][1]:
+                fingers.append(0)
+            else:
+                fingers.append(1)
+        if hand == "Left":
+            # Thumb
+            if lmList[self.tipIds[0]][1] > lmList[self.tipIds[0] - 1][1]:
                 fingers.append(1)
             else:
                 fingers.append(0)
 
-        return fingers
-    
-    # Check if index finger is up
-    def fingersUpR(self):    
-        fingers = [] 
-        
-        # Thumb
-        if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]:
-            fingers.append(1)
-        else:
-            fingers.append(0)
-
         # Fingers
         for id in range(1, 5):
 
-            if self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id] - 2][2]:
+            if lmList[self.tipIds[id]][2] < lmList[self.tipIds[id] - 2][2]:
                 fingers.append(1)
             else:
                 fingers.append(0)
@@ -244,3 +228,21 @@ class KeyboardShortcuts():
         # If both index and pinky fingers are up, open keyboard:
         if fingers[0] == 0 and fingers[1] == 1 and all(finger == 0 for finger in fingers[2:4]) and fingers[4] == 1:
             pyautogui.hotkey('ctrl', 'win', 'o')
+
+# Class to zoom in and out
+class Zoom():
+
+    def __init__(self) -> None:
+        pass
+
+    def zoomIn_zoomOut(self, fingers, fingersR):
+
+        # If the both thumb fingers are up:
+        if fingers[0] == 1 and fingersR[0] == 1 and all(finger == 0 for finger in fingers[1:]) and all(finger == 0 for finger in fingersR[1:]):
+            # Zoom In
+            pyautogui.hotkey('ctrl', '+')
+        
+        # If the both index fingers are up:
+        if fingers[4] == 1 and fingersR[4] == 1 and all(finger == 0 for finger in fingers[:4]) and all(finger == 0 for finger in fingersR[:4]):
+            # Zoom In
+            pyautogui.hotkey('ctrl', '-')

@@ -6,11 +6,12 @@ def main():
     # Opening the camera
     cap = cv2.VideoCapture(0)
     
-    # Creating a variable to store the use the hand detector class
+    # Creating a variable to store the use the classes
     hand_detector = mg.HandDetector()
     mouse_control = mg.MouseControl()
     volume_control = mg.VolumeControl()
     keyboard_control = mg.KeyboardShortcuts()
+    zoom_control = mg.Zoom()
 
     # While the camera is opened
     while cap.isOpened():
@@ -21,46 +22,54 @@ def main():
         # Detecting hand and drawing lines
         image = hand_detector.findHands(image)
 
-        # Detect if the hand is right or left
-        handsType = hand_detector.left_right()
-        for handType in handsType:
-            # If the left hand is detected
-            """ if handType == "Right":
-                # Getting position of hand
-                lmList = hand_detector.findPosition(image)
+        # Getting position of left hand
+        lmList = hand_detector.findPosition(image, handType = "Right")
 
-                # If a hand is detected and has position
-                if len(lmList)!=0:
+        # Getting position of right hand
+        lmListR = hand_detector.findPosition(image, handType = "Left")
 
-                    # Check the fingers tips status
-                    fingers = hand_detector.fingersUp()
+        ### LOGICAL FOR LEFT HAND ###
 
-                    # Move the mouse by using your left index finger up
-                    mouse_control.moveMouse(fingers, lmList)
+        # If a hand is detected and has position
+        if len(lmList)!=0 and len(lmListR)==0:
 
-                    # Click
-                    mouse_control.click(fingers, hand_detector)
+            """ # Check the fingers tips status
+            fingers = hand_detector.fingersUp(lmList, "Right")
 
-                    # Drag
-                    mouse_control.drag(fingers)
- """
-            # If the right hand is detected:
-            if handType == "Left":
-                
-                # Getting position of hand
-                lmList = hand_detector.findPosition(image)
+            # Move the mouse by using your left index finger up
+            mouse_control.moveMouse(fingers, lmList)
 
-                # If a hand is detected and has position
-                if len(lmList)!=0:
-                    
-                    # Check the fingers tips status
-                    fingersR = hand_detector.fingersUpR()
-                    
-                    # Change the volume
-                    volume_control.volume(fingersR, hand_detector)
+            # Click
+            mouse_control.click(fingers, hand_detector)
 
-                    # Use keyboard shortcuts
-                    keyboard_control.shortcuts(fingersR)
+            # Drag
+            mouse_control.drag(fingers) """
+        
+        ### LOGICAL FOR RIGHT HAND ###
+
+        # If a hand is detected and has position
+        if len(lmListR)!=0 and len(lmList)==0:
+            print("Direita")
+            """ # Check the fingers tips status
+            fingersR = hand_detector.fingersUp(lmListR, "Left")
+            
+            # Change the volume
+            volume_control.volume(fingersR, hand_detector)
+
+            # Use keyboard shortcuts
+            keyboard_control.shortcuts(fingersR) """
+
+        ### LOGICAL FOR BOTH HANDS ###
+        
+        # If both hands are in the screen
+        if len(lmListR)!=0 and len(lmList)!=0:
+            print("Ambas")
+            """ # Getting fingers values
+            fingers = hand_detector.fingersUp(lmList, "Right")
+            fingersR = hand_detector.fingersUp(lmListR, "Left")
+
+            # Perform zoom in and out
+            zoom_control.zoomIn_zoomOut(fingers, fingersR) """
 
         # Display the frame with annotations
         cv2.imshow('Control Computer by hand movements', cv2.flip(image, 1))

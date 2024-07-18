@@ -1,10 +1,9 @@
+- [Computer\_Cam\_Control](#computer_cam_control)
+  - [Features](#features)
+  - [How can I achieve each feature?](#how-can-i-achieve-each-feature)
+
 # Computer_Cam_Control
- Using computer vision to send commands to the computer
-
-## Summary
-
-- [Features](#features)
-- [How can I achieve each feature?](#how-can-i-achieve-each-feature)
+<small>Using computer vision to send commands to the computer</small>
 
 ## Features
 
@@ -15,8 +14,10 @@
 - [X] Use keyboard shortcuts (arrows, Esc, open keyboard, and enter) - right hand;
 - [ ] Zoom in and out - both hands;
 
-*** What will make this project the difference ***
-- Calculate the square box proportional to the hand distance
-- Create a start-stop
+**What makes this project the difference**
+
+- Square box proportional to the hand distance
+- Start-stop facial command
+- Use two hands at the same time
 
 ## How can I achieve each feature?

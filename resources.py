@@ -131,9 +131,6 @@ class MouseControl():
         # Parameters for the coordinates interpolation
         self.yp = [frameR , height-frameR]
         self.fpy = [0, self.screen_height]
-
-        # Check if is dragging
-        self.dragging = False
     
     # Move the mouse
     def moveMouse(self, fingers, lmList):
@@ -238,11 +235,11 @@ class Zoom():
     def zoomIn_zoomOut(self, fingers, fingersR):
 
         # If the both thumb fingers are up:
-        if fingers[0] == 1 and fingersR[0] == 1 and all(finger == 0 for finger in fingers[1:]) and all(finger == 0 for finger in fingersR[1:]):
+        if fingers[0] == 1 and fingersR[0] == 0 and all(finger == 0 for finger in fingers[1:]) and all(finger == 0 for finger in fingersR[1:]):
             # Zoom In
             pyautogui.hotkey('ctrl', '+')
         
         # If the both index fingers are up:
-        if fingers[4] == 1 and fingersR[4] == 1 and all(finger == 0 for finger in fingers[:4]) and all(finger == 0 for finger in fingersR[:4]):
+        if fingers[0] == 0 and fingersR[0] == 1 and fingers[1] == 1 and fingersR[1] == 1 and all(finger == 0 for finger in fingers[2:]) and all(finger == 0 for finger in fingersR[2:]):
             # Zoom In
             pyautogui.hotkey('ctrl', '-')

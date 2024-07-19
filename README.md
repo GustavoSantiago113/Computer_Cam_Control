@@ -3,7 +3,7 @@
   - [How can I achieve each feature?](#how-can-i-achieve-each-feature)
 
 # Computer_Cam_Control
-<small>Using computer vision to send commands to the computer</small>
+<small>Using computer vision to command your computer</small>
 
 ## Features
 

@@ -35,15 +35,15 @@ def main():
 
             # Check the fingers tips status
             fingers = hand_detector.fingersUp(lmList, "Right")
-            print(fingers)
-            """ # Move the mouse by using your left index finger up
+
+            # Move the mouse by using your left index finger up
             mouse_control.moveMouse(fingers, lmList)
 
             # Click
-            mouse_control.click(fingers, hand_detector)
+            mouse_control.click(fingers, hand_detector, lmList)
 
             # Drag
-            mouse_control.drag(fingers) """
+            mouse_control.drag(fingers)
         
         ### LOGICAL FOR RIGHT HAND ###
 

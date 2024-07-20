@@ -105,10 +105,10 @@ class HandDetector():
         return fingers
     
     # Finds distance between two fingers
-    def findDistance(self, p1, p2):   
-
-        x1, y1 = self.lmList[p1][1:]
-        x2, y2 = self.lmList[p2][1:]
+    def findDistance(self, p1, p2, lmList):   
+        
+        x1, y1 = lmList[p1][1:]
+        x2, y2 = lmList[p2][1:]
 
         length = math.hypot(x2 - x1, y2 - y1)
         
@@ -147,9 +147,11 @@ class MouseControl():
             pyautogui.moveTo(self.screen_width - self.x3, self.y3)
     
     # Click
-    def click(self, fingers, hand_detector):
-        if fingers[1] == 1:
-            length = hand_detector.findDistance(5, 4)
+    def click(self, fingers, hand_detector, lmList):
+        
+        if fingers[1] == 1:   
+            length = hand_detector.findDistance(5, 4, lmList)
+
             pyautogui.mouseUp(button = "left")
 
             # Click with the left button by touching your thumb finger in your ring finger base

@@ -15,7 +15,7 @@ I hope you enjoy! 😊
 - [X] Click (right, left, double)  - left hand;
 - [X] Drag mouse - left hand;
 - [X] Increase and decrease volume - right hand; 
-- [X] Use keyboard shortcuts (arrows, Esc, open keyboard, and enter) - right hand;
+- [X] Use keyboard shortcuts (arrows, Esc, open keyboard, and space) - right hand;
 - [X] Zoom in and out - both hands;
 - [X] Start-stop command.
 
@@ -88,10 +88,10 @@ First run the index.py code. After the camera turns on, to start commanding your
   ![Esc](Images/esc.png)
   <center>Esc</center>
 
-  * Enter: raise both thumb and pinky fingers;
+  * Space: raise both thumb and pinky fingers;
 
-  ![Enter](Images/enter.png)
-  <center>Enter</center>
+  ![Space](Images/space.png)
+  <center>Space</center>
 
   * Open virtual keyboard: raise both index and pinky fingers;
 

@@ -223,7 +223,7 @@ class KeyboardShortcuts():
         
         # If both thumb and pinky fingers are up, use enter:
         if fingers[0] == 1 and all(finger == 0 for finger in fingers[1:4]) and fingers[4] == 1:
-            pyautogui.press("enter")
+            pyautogui.press("space")
         
         # If both index and pinky fingers are up, open keyboard:
         if fingers[0] == 0 and fingers[1] == 1 and all(finger == 0 for finger in fingers[2:4]) and fingers[4] == 1:

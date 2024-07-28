@@ -3,6 +3,7 @@ import numpy as np
 import mediapipe as mp
 import cv2
 import math
+import time
 
 # Creating the class to detect and draw the annotations in the hands
 class HandDetector():
@@ -105,41 +106,42 @@ class HandDetector():
         return fingers
     
     # Finds distance between two fingers
-    def findDistance(self, p1, p2, lmList):   
-        
+    def findDistance(self, p1, p2, lmList):
+
         x1, y1 = lmList[p1][1:]
         x2, y2 = lmList[p2][1:]
 
         length = math.hypot(x2 - x1, y2 - y1)
-        
         return length
+    
 
 # Creating a class to control the mouse - movement and clicking
 class MouseControl():
 
-    def __init__(self, width = 640, height = 480, frameR = 100 ):
+    def __init__(self, width = 640, height=480, frameR = 100 ):
         
         self.screen_width, self.screen_height = pyautogui.size() # Screen width and height
         self.width = width # Width of Camera
         self.height = height # Height of Camera
         self.frameR = frameR # Frame rate
-        
+
         # Parameters for the coordinates interpolation
-        self.xp = [frameR, width-frameR]
+        self.xp = [self.frameR, self.width-self.frameR]
         self.fpx = [0, self.screen_width]
 
         # Parameters for the coordinates interpolation
-        self.yp = [frameR , height-frameR]
+        self.yp = [self.frameR , self.height-self.frameR]
         self.fpy = [0, self.screen_height]
-    
+
     # Move the mouse
     def moveMouse(self, fingers, lmList):
+
         # Set the variables x1 and y1 as the coordinates of the base of the middle finger
         x1, y1 = lmList[9][1:]
-
+        
         self.x3 = np.interp(x1, self.xp, self.fpx)
         self.y3 = np.interp(y1, self.yp, self.fpy)
-        
+
         # If the index finger is up:
         if fingers[1] == 1:
 
@@ -147,15 +149,14 @@ class MouseControl():
             pyautogui.moveTo(self.screen_width - self.x3, self.y3)
     
     # Click
-    def click(self, fingers, hand_detector, lmList):
+    def click(self, fingers):
         
-        if fingers[1] == 1:   
-            length = hand_detector.findDistance(5, 4, lmList)
-
+        if fingers[1] == 1: 
+            
             pyautogui.mouseUp(button = "left")
 
             # Click with the left button by touching your thumb finger in your ring finger base
-            if length < 12:
+            if fingers[0] == 1:
                 pyautogui.click()
 
             # Double click with the left button by putting up index and middle fingers
@@ -236,12 +237,34 @@ class Zoom():
 
     def zoomIn_zoomOut(self, fingers, fingersR):
 
-        # If the both thumb fingers are up:
+        # If both thumb fingers are up:
         if fingers[0] == 1 and fingersR[0] == 0 and all(finger == 0 for finger in fingers[1:]) and all(finger == 0 for finger in fingersR[1:]):
             # Zoom In
             pyautogui.hotkey('ctrl', '+')
         
-        # If the both index fingers are up:
+        # If both index fingers are up:
         if fingers[0] == 0 and fingersR[0] == 1 and fingers[1] == 1 and fingersR[1] == 1 and all(finger == 0 for finger in fingers[2:]) and all(finger == 0 for finger in fingersR[2:]):
             # Zoom In
             pyautogui.hotkey('ctrl', '-')
+
+# Class to start-stop
+class StartStop():
+
+    def __init__(self, cooldown_time=2.0):
+        self.last_toggle_time = 0
+        self.cooldown_time = cooldown_time
+
+    def start(self, start, fingers, fingersR):
+
+        # Get the current time
+        current_time = time.time()
+
+        # If all the fingers are up:
+        if (current_time - self.last_toggle_time) > self.cooldown_time:
+            if fingers[0] == 0 and fingersR[0] == 1 and all(finger == 1 for finger in fingers[1:]) and all(finger == 1 for finger in fingersR[1:]):
+                start = not start
+                self.last_toggle_time = current_time
+                print(start)
+        
+        return start
+        

@@ -69,7 +69,7 @@ def main():
                 fingersR = hand_detector.fingersUp(lmListR, "Left")
 
                 # Change the volume
-                volume_control.volume(fingersR, hand_detector)
+                volume_control.volume(fingersR, hand_detector, lmListR)
 
                 # Use keyboard shortcuts
                 keyboard_control.shortcuts(fingersR)

@@ -180,13 +180,14 @@ class VolumeControl():
         pass
 
     # Defining the function to perform it
-    def volume(self, fingers, hand_detector):
-
+    def volume(self, fingers, hand_detector, lmList):
+       
         # If all the fingers are up:
         if all(element == 1 for element in fingers):
-            # Get the distance between index and thumb tips
-            length = hand_detector.findDistance(8, 4)
 
+            # Get the distance between index and thumb tips
+            length = hand_detector.findDistance(4, 8, lmList)
+            
             # Change the volume by the distance
             if length > 50:
                 pyautogui.press("volumeup")

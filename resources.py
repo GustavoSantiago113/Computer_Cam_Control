@@ -178,10 +178,18 @@ class MouseControl():
     
     # Drag
     def drag(self, fingers):
-        # Keep the hand closed to click and drag
-        if all(element == 0 for element in fingers):
-            pyautogui.mouseDown(button = "left")
-            pyautogui.moveTo(self.screen_width - self.x3, self.y3)
+
+        cooldown_time = 1
+        last_toggle_time = 0
+        current_time = time.time()
+
+        if (current_time - last_toggle_time) > cooldown_time:
+
+            # Keep the hand closed to click and drag
+            if all(element == 0 for element in fingers):
+                pyautogui.mouseDown(button = "left")
+                pyautogui.moveTo(self.screen_width - self.x3, self.y3)
+                last_toggle_time = current_time
 
 # Class to control the volume
 class VolumeControl():
@@ -211,33 +219,45 @@ class KeyboardShortcuts():
     # Defining the function to do it
     def shortcuts(self, fingers):
 
-        # If only the thumb is up, use left arrow:
-        if fingers[0] == 1 and all(finger ==0 for finger in fingers[1:]):
-            pyautogui.press("left")
+        cooldown_time = 1
+        last_toggle_time = 0
+        current_time = time.time()
+
+        if (current_time - last_toggle_time) > cooldown_time:
+            # If only the thumb is up, use left arrow:
+            if fingers[0] == 1 and all(finger ==0 for finger in fingers[1:]):
+                pyautogui.press("left")
+                last_toggle_time = current_time
+                
+            # If only the pinky is up, use right arrow:
+            if all(finger ==0 for finger in fingers[:4]) and fingers[4] == 1:
+                pyautogui.press("right")
+                last_toggle_time = current_time
             
-        # If only the pinky is up, use right arrow:
-        if all(finger ==0 for finger in fingers[:4]) and fingers[4] == 1:
-            pyautogui.press("right")
-        
-        # If only the index finger is up, use up arrow:
-        if fingers[0] == 0 and fingers[1] == 1 and all(finger ==0 for finger in fingers[2:]):
-            pyautogui.press("up")
-        
-        # If both index and middle fingers are up, use down arrow:
-        if fingers[0] == 0 and all(finger == 1 for finger in fingers[1:3]) and all(finger == 0 for finger in fingers[3:]):
-            pyautogui.press("down")
-        
-        # If both thumb and index fingers are up, use Esc:
-        if all(finger == 1 for finger in fingers[0:2]) and all(finger == 0 for finger in fingers[2:]):
-            pyautogui.press("esc")
-        
-        # If both thumb and pinky fingers are up, use enter:
-        if fingers[0] == 1 and all(finger == 0 for finger in fingers[1:4]) and fingers[4] == 1:
-            pyautogui.press("space")
-        
-        # If both index and pinky fingers are up, open keyboard:
-        if fingers[0] == 0 and fingers[1] == 1 and all(finger == 0 for finger in fingers[2:4]) and fingers[4] == 1:
-            pyautogui.hotkey('ctrl', 'win', 'o')
+            # If only the index finger is up, use up arrow:
+            if fingers[0] == 0 and fingers[1] == 1 and all(finger ==0 for finger in fingers[2:]):
+                pyautogui.press("up")
+                last_toggle_time = current_time
+            
+            # If both index and middle fingers are up, use down arrow:
+            if fingers[0] == 0 and all(finger == 1 for finger in fingers[1:3]) and all(finger == 0 for finger in fingers[3:]):
+                pyautogui.press("down")
+                last_toggle_time = current_time
+            
+            # If both thumb and index fingers are up, use Esc:
+            if all(finger == 1 for finger in fingers[0:2]) and all(finger == 0 for finger in fingers[2:]):
+                pyautogui.press("esc")
+                last_toggle_time = current_time
+            
+            # If both thumb and pinky fingers are up, use enter:
+            if fingers[0] == 1 and all(finger == 0 for finger in fingers[1:4]) and fingers[4] == 1:
+                pyautogui.press("space")
+                last_toggle_time = current_time
+            
+            # If both index and pinky fingers are up, open keyboard:
+            if fingers[0] == 0 and fingers[1] == 1 and all(finger == 0 for finger in fingers[2:4]) and fingers[4] == 1:
+                pyautogui.hotkey('ctrl', 'win', 'o')
+                last_toggle_time = current_time
 
 # Class to zoom in and out
 class Zoom():

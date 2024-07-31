@@ -135,7 +135,7 @@ class MouseControl():
 
     # Move the mouse
     def moveMouse(self, fingers, lmList):
-
+        
         # Set the variables x1 and y1 as the coordinates of the base of the middle finger
         x1, y1 = lmList[9][1:]
         
@@ -144,28 +144,37 @@ class MouseControl():
 
         # If the index finger is up:
         if fingers[1] == 1:
-
+            
             # Moving the cursor
             pyautogui.moveTo(self.screen_width - self.x3, self.y3)
     
     # Click
     def click(self, fingers):
         
-        if fingers[1] == 1: 
-            
-            pyautogui.mouseUp(button = "left")
+        cooldown_time = 1
+        last_toggle_time = 0
+        current_time = time.time()
 
-            # Click with the left button by touching your thumb finger in your ring finger base
-            if fingers[0] == 1:
-                pyautogui.click()
+        if (current_time - last_toggle_time) > cooldown_time:
 
-            # Double click with the left button by putting up index and middle fingers
-            if fingers[2] == 1:
-                pyautogui.click(clicks=2)
+            if fingers[1] == 1: 
+                
+                pyautogui.mouseUp(button = "left")
 
-        if fingers[1] == 1 and fingers[4] == 1:
-            # Right click by putting up the index and pinky fingers
-            pyautogui.click(button = "right")
+                # Click with the left button by touching your thumb finger in your ring finger base
+                if fingers[2] == 1:
+                    pyautogui.click()
+                    last_toggle_time = current_time
+
+                # Double click with the left button by putting up index and middle fingers
+                if fingers[2] == 1 and fingers[3] == 1:
+                    pyautogui.click(clicks=2)
+                    last_toggle_time = current_time
+
+                if fingers[4] == 1:
+                    # Right click by putting up the index and pinky fingers
+                    pyautogui.click(button = "right")
+                    last_toggle_time = current_time
     
     # Drag
     def drag(self, fingers):

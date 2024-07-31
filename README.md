@@ -31,12 +31,12 @@ First run the index.py code. After the camera turns on, to start commanding your
 ![Mouse movement](Images/mouse-control.png)
 <center>Mouse control gesture</center>
 
-* To **single left click**, keep the left hand index finger raised and raise the left hand thumb;
+* To **single left click**, keep the left hand index finger raised and raise the left hand middle finger;
 
 ![Single Left Click](Images/single-left-click.png)
 <center>Single left click</center>
 
-* To **double left click**, keep the left hand index finger raised and raise the left hand middle finger;
+* To **double left click**, keep the left hand index finger raised and raise both the left hand middle and ring fingers;
 
 ![Double Left Click](Images/double-left-click.png)
 <center>Double left click</center>

@@ -47,7 +47,7 @@ def main():
 
             # If a hand is detected and has position
             if len(lmList)!=0 and len(lmListR)==0:
-
+                
                 # Check the fingers tips status
                 fingers = hand_detector.fingersUp(lmList, "Right")
                 

@@ -227,22 +227,18 @@ class KeyboardShortcuts():
             # If only the thumb is up, use left arrow:
             if fingers[0] == 1 and all(finger ==0 for finger in fingers[1:]):
                 pyautogui.press("left")
-                last_toggle_time = current_time
                 
             # If only the pinky is up, use right arrow:
             if all(finger ==0 for finger in fingers[:4]) and fingers[4] == 1:
                 pyautogui.press("right")
-                last_toggle_time = current_time
             
             # If only the index finger is up, use up arrow:
             if fingers[0] == 0 and fingers[1] == 1 and all(finger ==0 for finger in fingers[2:]):
                 pyautogui.press("up")
-                last_toggle_time = current_time
             
             # If both index and middle fingers are up, use down arrow:
             if fingers[0] == 0 and all(finger == 1 for finger in fingers[1:3]) and all(finger == 0 for finger in fingers[3:]):
                 pyautogui.press("down")
-                last_toggle_time = current_time
             
             # If both thumb and index fingers are up, use Esc:
             if all(finger == 1 for finger in fingers[0:2]) and all(finger == 0 for finger in fingers[2:]):

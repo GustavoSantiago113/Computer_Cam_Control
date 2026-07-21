@@ -1,74 +1,96 @@
+import os
+import urllib.request
 import pyautogui
 import numpy as np
 import mediapipe as mp
+from mediapipe.tasks.python import vision
+from mediapipe.tasks.python.core.base_options import BaseOptions
 import cv2
 import math
 import time
 
+# The legacy mp.solutions API was removed from mediapipe; the hand landmarker
+# model now has to be fetched and loaded through the newer Tasks API instead.
+_HAND_LANDMARKER_MODEL_URL = "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task"
+_HAND_LANDMARKER_MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "hand_landmarker.task")
+
+# Downloads the hand landmarker model to disk the first time it's needed
+def _ensure_hand_landmarker_model():
+    if not os.path.exists(_HAND_LANDMARKER_MODEL_PATH):
+        os.makedirs(os.path.dirname(_HAND_LANDMARKER_MODEL_PATH), exist_ok=True)
+        urllib.request.urlretrieve(_HAND_LANDMARKER_MODEL_URL, _HAND_LANDMARKER_MODEL_PATH)
+    return _HAND_LANDMARKER_MODEL_PATH
+
 # Creating the class to detect and draw the annotations in the hands
 class HandDetector():
-    
+
     # Initializing the class, with the needed variables
-    def __init__(self, model_complexity = 0, min_detection_confidence = 0.75, min_tracking_confidence = 0.75):
-        
-        self.model_complexity = model_complexity
+    def __init__(self, min_detection_confidence = 0.75, min_tracking_confidence = 0.75):
+
         self.min_detection_confidence = min_detection_confidence
         self.min_tracking_confidence = min_tracking_confidence
-        
-        self.mp_drawing = mp.solutions.drawing_utils
-        self.mp_drawing_styles = mp.solutions.drawing_styles
-        self.mp_hands = mp.solutions.hands
 
-        self.hands = self.mp_hands.Hands()
+        self.mp_drawing = vision.drawing_utils
+        self.mp_drawing_styles = vision.drawing_styles
+        self.hand_connections = vision.HandLandmarksConnections.HAND_CONNECTIONS
+
+        options = vision.HandLandmarkerOptions(
+            base_options=BaseOptions(model_asset_path=_ensure_hand_landmarker_model()),
+            running_mode=vision.RunningMode.IMAGE,
+            num_hands=2,
+            min_hand_detection_confidence=min_detection_confidence,
+            min_tracking_confidence=min_tracking_confidence)
+        self.hands = vision.HandLandmarker.create_from_options(options)
 
         # Ids of the tip of the fingers
         self.tipIds = [4, 8, 12, 16, 20]
-        
+
     # Creating the function to return the hands location
     def findHands(self, image):
-        
+
         # Dont allow writing in the image yet
         image.flags.writeable = False
 
         # Convert the image to RGB
         imageRGB = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=imageRGB)
+
         # Apply the model in the image
-        self.results = self.hands.process(imageRGB)
+        self.results = self.hands.detect(mp_image)
 
         # Allow to make draws in the image
         image.flags.writeable = True
-        
+
         # If there are any hand detections in the image, draw them
-        if self.results.multi_hand_landmarks:
-            for hand_landmarks in self.results.multi_hand_landmarks:
+        if self.results.hand_landmarks:
+            for hand_landmarks in self.results.hand_landmarks:
                 self.mp_drawing.draw_landmarks(
                     image,
                     hand_landmarks,
-                    self.mp_hands.HAND_CONNECTIONS,
+                    self.hand_connections,
                     self.mp_drawing_styles.get_default_hand_landmarks_style(),
                     self.mp_drawing_styles.get_default_hand_connections_style())
-                
+
         return image
-    
+
     # Fetches the position of a hand
     def findPosition(self, img, handNo=0, handType = None):
-        
+
         # Creating empty lists to store position
         xList = []
         yList = []
         self.lmList = []
 
         # If a hand is detected:
-        if self.results.multi_hand_landmarks:
+        if self.results.hand_landmarks:
             # For each hand detected
-            for hand in self.results.multi_handedness:
+            for handedness in self.results.handedness:
                 # If the hand is the same as selected previously:
-                if hand.classification[0].label == handType:
+                if handedness[0].category_name == handType:
                     # Gets the information of the hand
-                    myHand = self.results.multi_hand_landmarks[handNo]
+                    myHand = self.results.hand_landmarks[handNo]
                     # For each information, get and store the information
-                    for id, lm in enumerate(myHand.landmark):
+                    for id, lm in enumerate(myHand):
                         h, w, c = img.shape
                         cx, cy = int(lm.x * w), int(lm.y * h)
                         xList.append(cx)
